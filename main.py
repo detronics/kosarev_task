@@ -46,19 +46,19 @@ class MyWidget(QWidget):
         self.btn = QPushButton('Добавить', self)
         self.btn.resize(150, 40)
         self.btn.move(300, 310)
-        self.btn.clicked.connect(self.ins)
+        self.btn.clicked.connect(self.insert)
 # кнопка удалить запись
         self.btn = QPushButton('Удалить', self)
         self.btn.resize(150, 40)
         self.btn.move(300, 360)
-        self.btn.clicked.connect(self.dels)
+        self.btn.clicked.connect(self.delete)
 # соединение с базой данных
     def con(self):
         self.conn = psycopg2.connect(user = "postgres",
                               password = "123456",
                               host = "localhost",
                               port = "5432",
-                              database = "staff")
+                              database = "staff_db")
         self.cur = self.conn.cursor()
 # обновить таблицу и поля
     def upd(self):
@@ -70,7 +70,7 @@ class MyWidget(QWidget):
         self.otchestvo.setText('')
         self.sex.setText('')
 # добавить таблицу новую строку
-    def ins(self):
+    def insert(self):
         fio, oce = self.fio.text(), self.oce.text()
         try:
             self.cur.execute("insert into student (name, ocenka) values (%s,%s)",(fio,oce))
@@ -78,7 +78,7 @@ class MyWidget(QWidget):
             pass
         self.upd()
 # удалить из таблицы строку
-    def dels(self):
+    def delete(self):
         try:
             ids = int(self.id.text()) # идентификатор строки
         except:
@@ -103,7 +103,7 @@ class Tb(QTableWidget):
         self.clear()
         self.setRowCount(0)
         self.setHorizontalHeaderLabels(['id', 'Имя', 'Фамилия', 'Отчество', 'Пол']) # заголовки столцов
-        self.wg.cur.execute("select * from persons order by name")
+        self.wg.cur.execute("select * from staff_info order by id")
         rows = self.wg.cur.fetchall()
         i = 0
         for elem in rows:
