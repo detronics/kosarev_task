@@ -5,8 +5,9 @@ con = psycopg2.connect(
     user="postgres",
     password="123456",
     host="127.0.0.1",
-    port="5432"
-)
+    port="5432",
+    )
+
 # Создание соединения
 # def create_connection():
 #     try:
@@ -55,6 +56,19 @@ def extract_data():
     except (Exception) as error:
         print("Ошибка при извлечении данных", error)
 
+def extract_alldata():
+    try:
+        cur = con.cursor()
+        cur.execute(
+          "SELECT position_name,(SELECT name FROM persons WHERE id=Positions.id_person) FROM Positions WHERE id_person = 1"
+
+        )
+        rows = cur.fetchall()
+        print(rows)
+        con.close()
+    except (Exception) as error:
+        print("Ошибка при извлечении данных", error)
+
 #Удаление строки
 def delete_data():
     try:
@@ -65,3 +79,5 @@ def delete_data():
     except (Exception) as error:
         print("Ошибка при удалении данных", error)
 
+# extract_data()
+# extract_alldata()
