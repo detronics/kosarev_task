@@ -13,7 +13,7 @@ class MyWidget(QWidget):
 # подключить базу данных
         self.con()
 # параметры окна
-        self.setGeometry(100, 100, 500, 600)
+        self.setGeometry(100, 100, 800, 600)
         self.setWindowTitle('Список сотрудников')
         self.tb = Tb(self)
 # кнопка "обновить"
@@ -58,7 +58,7 @@ class MyWidget(QWidget):
                               password = "123456",
                               host = "localhost",
                               port = "5432",
-                              database = "staff_db")
+                              database = "staff")
         self.cur = self.conn.cursor()
 # обновить таблицу и поля
     def upd(self):
@@ -103,7 +103,7 @@ class Tb(QTableWidget):
         self.clear()
         self.setRowCount(0)
         self.setHorizontalHeaderLabels(['id', 'Имя', 'Фамилия', 'Отчество', 'Пол']) # заголовки столцов
-        self.wg.cur.execute("select * from staff_info order by id")
+        self.wg.cur.execute("select * from persons order by id")
         rows = self.wg.cur.fetchall()
         i = 0
         for elem in rows:
