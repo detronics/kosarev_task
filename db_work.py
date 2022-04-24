@@ -1,4 +1,5 @@
 import psycopg2
+import random
 
 con = psycopg2.connect(
     database="staff",
@@ -6,7 +7,23 @@ con = psycopg2.connect(
     password="123456",
     host="127.0.0.1",
     port="5432",
-    )
+)
+name = ['Ярослав', 'Лев', 'Василиса', 'Дарья', 'Виктория', 'Максим', 'Анастасия', 'Анна', 'Сергей', 'Арина', 'Павел',
+        'Иван', 'Алексей', 'Максим', 'Таисия', ]
+last_name = ['Александров ', 'Алексеев ', 'Анисимова ', 'Антонов ', 'Баранов ', 'Белоусов ', 'Богданова ', 'Богомолов ',
+             'Борисова ', 'Булатов ', 'Булгаков ', 'Васильев ', 'Васильева ', 'Глебова ', 'Денисов ', ]
+middle_name = ['Данииловна', 'Романович', 'Константинович', 'Германовна', 'Михайлович', 'Тимуровна', 'Николаевич',
+               'Александрович', 'Иванович', 'Степанович', 'Матвеевич', 'Ильич', 'Платоновна', 'Данииловна',
+               'Павловна', ]
+sex = ['мужской', 'женский']
+birthday = ['2022-01-13', '2034-06-15', '1959-02-01', '2002-11-04', '1981-02-13', '1931-05-16', '2003-06-02',
+            '2031-06-26', '1990-07-09', '2026-11-09', '2029-06-30', '2031-10-27', '2032-09-27', '1993-09-24',
+            '1967-09-25', ]
+departments = ['Бухгалтерия', 'Отдел кадров', 'Руководство', 'Связь', 'Энергетики', 'Транспрортники', 'Мед персонал',
+               'КИП', 'Метод кабинет', 'Пожарники', ]
+positions = ['Сантехник', 'Машинист', 'Водитель', 'Преподаватель', 'Начальник', 'Доктор', 'Приборист', 'Оператор',
+             'Плотник', ]
+
 
 # Создание соединения
 # def create_connection():
@@ -35,7 +52,9 @@ def insert_data():
     try:
         cur = con.cursor()
         cur.execute(
-          "INSERT INTO persons (id,name,familiya,otchestvo,pol) VALUES (1, 'John', 'ivanov', 'petrovich', 'male')"
+            "INSERT INTO persons (id,name,familiya,otchestvo,pol,birthday) VALUES (2, 'Petr', 'Petrov', 'Petrovich','male','2012-11-11');"
+            " INSERT INTO positions (id, position_name,id_person) VALUES (2, 'master', 2);"
+            "INSERT INTO department (id, department_name, id_person) VALUES (2, 'grs', 2)"
         )
         con.commit()
         print("Record inserted successfully")
@@ -43,25 +62,26 @@ def insert_data():
     except (Exception) as error:
         print("Ошибка при вставке данных", error)
 
+
 # Извлечение данных
 def extract_data():
     try:
         cur = con.cursor()
         cur.execute(
-          "SELECT id,name,familiya,otchestvo,pol from persons"
+            "SELECT id,name,familiya,otchestvo,pol  from persons"
         )
         rows = cur.fetchall()
         print(rows)
         con.close()
     except (Exception) as error:
         print("Ошибка при извлечении данных", error)
+
 
 def extract_alldata():
     try:
         cur = con.cursor()
         cur.execute(
-          "SELECT position_name,(SELECT name FROM persons WHERE id=Positions.id_person) FROM Positions WHERE id_person = 1"
-
+            "SELECT persons.*,positions.position_name,department.department_name FROM persons INNER JOIN positions ON persons.id=positions.id_person INNER JOIN department ON persons.id=department.id_person"
         )
         rows = cur.fetchall()
         print(rows)
@@ -69,15 +89,19 @@ def extract_alldata():
     except (Exception) as error:
         print("Ошибка при извлечении данных", error)
 
-#Удаление строки
+
+# Удаление строки
 def delete_data():
     try:
         cur = con.cursor()
-        cur.execute("DELETE from persons where id=1;")
+        cur.execute("DELETE from persons where id=2;")
         con.commit()
         con.close()
     except (Exception) as error:
         print("Ошибка при удалении данных", error)
 
+
 # extract_data()
 # extract_alldata()
+# delete_data()
+insert_data()
