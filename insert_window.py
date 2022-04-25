@@ -1,10 +1,16 @@
 #!/usr/bin/python3
 
-import sys
+import sys, psycopg2
 from PyQt5.QtWidgets import QTableWidget, QApplication, QMainWindow, QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem, QWidget, QPushButton, QLineEdit
 from PyQt5 import QtGui
-
+con = psycopg2.connect(
+    database="staff",
+    user="postgres",
+    password="123456",
+    host="127.0.0.1",
+    port="5432",
+)
 
 class Insert_window(QWidget):
     def __init__(self):
@@ -27,7 +33,29 @@ class Insert_window(QWidget):
         self.close()
 
     def insert_data(self):
-        pass
+        data = []
+        try:
+            for i in range(0, self.Table.columnCount()):
+                data.append(self.Table.item(0,i).text())
+            print(data)
+            data[0] = int(data[0])
+            print(type(data[0]))
+        except:
+            print('er')
+        try:
+            cur = con.cursor()
+            cur.execute(
+        "INSERT INTO persons (id,name,familiya,otchestvo,pol,birthday) VALUES (data[0], 'data[1]', 'data[2]', 'Petrovich','male','2012-11-11');"
+        "INSERT INTO positions (id, position_name,id_person) VALUES (2, 'master', 2);"
+        "INSERT INTO department (id, department_name, id_person) VALUES (2, 'grs', 2)"
+            )
+            con.commit()
+            print("Record inserted successfully")
+            con.close()
+        except (Exception) as error:
+            print("Ошибка при вставке данных", error)
+            data = self.Table.item(0,0).text()
+            print(data)
 
 class Table(QTableWidget):
     def __init__(self, wg):
@@ -41,14 +69,16 @@ class Table(QTableWidget):
                                         "Должность", "Отдел"])
         header = self.horizontalHeader()
         header.setDefaultSectionSize(95)
+        # self.id = QTableWidgetItem('5859')
+        # self.setItem(0,0,self.id)
 
 
 
-#
-# app = QApplication(sys.argv)
-# ex = Insert_window()
-# ex.show()
-# sys.exit(app.exec_())
+
+app = QApplication(sys.argv)
+ex = Insert_window()
+ex.show()
+sys.exit(app.exec_())
 
 
 
