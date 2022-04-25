@@ -37,9 +37,7 @@ class Insert_window(QWidget):
         try:
             for i in range(0, self.Table.columnCount()):
                 data.append(self.Table.item(0,i).text())
-            print(data)
             data[0] = int(data[0])
-            print(type(data[0]))
         except:
             print('er')
         try:
