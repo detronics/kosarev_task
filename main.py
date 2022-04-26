@@ -3,8 +3,8 @@
 import sys
 import psycopg2
 from PyQt5.QtWidgets import QTableWidget, QApplication, QMainWindow, QTableWidget
-from PyQt5.QtWidgets import QTableWidgetItem, QWidget, QPushButton, QLineEdit
-from PyQt5 import QtGui
+from PyQt5.QtWidgets import QTableWidgetItem, QWidget, QPushButton, QTableView
+from PyQt5.QtSql import QSqlDatabase
 from insert_window import Insert_window,Table
 
 class MyWidget(QWidget):
@@ -38,11 +38,11 @@ class MyWidget(QWidget):
         self.btn.resize(130, 35)
         self.btn.move(430, 425)
         self.btn.clicked.connect(self.print)
-# кнопка редактирования строки
-#         self.btn = QPushButton('Редактировать', self)
-#         self.btn.resize(130, 35)
-#         self.btn.move(590, 425)
-#         self.btn.clicked.connect(self.edit)
+# кнопка записи изменений строки в БД
+        self.btn = QPushButton('Сохранить', self)
+        self.btn.resize(130, 35)
+        self.btn.move(590, 425)
+        self.btn.clicked.connect(self.edit)
 # соединение с базой данных
     def con(self):
         self.conn = psycopg2.connect(user = "postgres",
@@ -54,20 +54,18 @@ class MyWidget(QWidget):
 
 # обновить таблицу
     def upd(self):
-        self.conn.commit()
+        # self.conn.commit()
         self.tb.updt()
 
 # удалить из таблицы строку
     def delete(self):
-        num = str(self.number + 1)
-        if num == '0':
+        num = self.tb.item(self.number, 0).text()
+        try:
+            self.cur.execute("DELETE FROM persons WHERE id={0}".format(num))
+            self.conn.commit()
             self.upd()
-        else:
-            try:
-                self.cur.execute("DELETE FROM persons WHERE id=%s", (num))
-                self.upd()
-            except (Exception) as error:
-                print("Ошибка при удалении  данных", error)
+        except (Exception) as error:
+            print("Ошибка при удалении  данных", error)
 
 # вызов окна печати
     def print(self):
@@ -80,7 +78,28 @@ class MyWidget(QWidget):
 
 # редактирование  строки
     def edit(self):
-        pass
+        row_data=[]
+        try:
+            for i in range(0, self.tb.columnCount()):
+                row_data.append(self.tb.item(self.number, i).text())
+        except:
+                print('error')
+        print(row_data)
+        try:
+            self.cur.execute(
+                "UPDATE  persons SET name=%s,familiya=%s,otchestvo=%s,pol=%s,birthday=%s WHERE id=%s",
+                (row_data[1], row_data[2], row_data[3], row_data[4], row_data[5], row_data[0]))
+            self.cur.execute(
+                "UPDATE positions SET position_name=%s WHERE id_person=%s",
+                ( row_data[6],row_data[0]))
+            self.cur.execute(
+                "UPDATE department SET department_name=%s WHERE id_person=%s",
+                (row_data[7], row_data[0]))
+            self.conn.commit()
+            self.upd()
+            print("Record rewrite successfully")
+        except (Exception) as error:
+            print("Ошибка при перезаписи данных", error)
 
 
 
@@ -90,13 +109,12 @@ class Tb(QTableWidget):
         super().__init__(wg)
         self.setGeometry(10, 10, 600, 400)
         self.setColumnCount(8)
-        # header = self.horizontalHeader()
-        # header.setDefaultSectionSize(75)
         self.verticalHeader().hide()
         self.updt() # обновить таблицу
         self.setEditTriggers(QTableWidget.DoubleClicked) # запретить изменять поля
         self.cellClicked.connect(self.cellClick)  # установить обработчик щелча мыши в таблице
-
+        # self.mod = QTableView()
+        # self.mod.setModel()
 # обновление таблицы
     def updt(self):
         self.clear()

@@ -79,34 +79,3 @@ class Table(QTableWidget):
 # ex = Insert_window()
 # ex.show()
 # sys.exit(app.exec_())
-
-# здесь идентификатор
-#         self.id = QLineEdit(self)
-#         self.id.resize(100, 20)
-#         self.id.move(500, 60)
-#         self.id.setReadOnly(True)
-# здесь имя
-#         self.name = QLineEdit(self)
-#         self.name.resize(150, 40)
-#         self.name.move(300, 110)
-# здесь фамилия
-#         self.familiya = QLineEdit(self)
-#         self.familiya.resize(150, 40)
-#         self.familiya.move(300, 160)
-# здесь отчество
-#         self.otchestvo = QLineEdit(self)
-#         self.otchestvo.resize(150, 40)
-#         self.otchestvo.move(300, 210)
-# здесь пол
-#         self.sex = QLineEdit(self)
-#         self.sex.resize(150, 40)
-#         self.sex.move(300, 260)
-
-# добавить таблицу новую строку
-#     def insert(self):
-#         fio, oce = self.fio.text(), self.oce.text()
-#         try:
-#             self.cur.execute("insert into student (name, ocenka) values (%s,%s)",(fio,oce))
-#         except (Exception) as error:
-#             print("Ошибка при добавлении  данных", error)
-#         self.upd()

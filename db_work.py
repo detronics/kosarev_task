@@ -24,8 +24,7 @@ departments = ['Бухгалтерия', 'Отдел кадров', 'Руков�
 positions = ['Сантехник', 'Машинист', 'Водитель', 'Преподаватель', 'Начальник', 'Доктор', 'Приборист', 'Оператор',
              'Плотник', ]
 
-p = name[random.randint(0,14)]
-print(p)
+
 # Создание соединения
 # def create_connection():
 #     try:
@@ -68,14 +67,17 @@ def insert_data():
 def random_insert():
     try:
         cur = con.cursor()
-        for i in range(0,10):
+        for i in range(1,15):
             cur.execute(
-                "INSERT INTO persons (id,name,familiya,otchestvo,pol,birthday) VALUES (i, 'name[random.randint(0,14)]', "
-                "'last_name[random.randint(0,14)]', 'middle_name[random.randint(0,14)]','sex[random.randint(0,1)]',"
-                "'birthday[random.randint(0,14)]');"
-                " INSERT INTO positions (id, position_name,id_person) VALUES (i, 'positions[random.randint(0,8)]', i);"
-                "INSERT INTO department (id, department_name, id_person) VALUES (i, 'departments[random.randint(0,9)]', i)"
-            )
+                "INSERT INTO persons (id,name,familiya,otchestvo,pol,birthday) VALUES (%s,%s,%s,%s,%s,%s)",
+                (i, name[random.randint(0,14)], last_name[random.randint(0,14)], middle_name[random.randint(0,14)],
+                 sex[random.randint(0,1)], birthday[random.randint(0,14)]))
+            cur.execute(
+            "INSERT INTO positions (id, position_name,id_person) VALUES (%s,%s,%s)",
+            (i, positions[random.randint(0,8)], i))
+            cur.execute(
+            "INSERT INTO department (id, department_name, id_person) VALUES (%s,%s,%s)",
+            (i, departments[random.randint(0,9)], i))
         con.commit()
         print(" Random record inserted successfully")
         con.close()
@@ -115,14 +117,28 @@ def extract_alldata():
 def delete_data():
     try:
         cur = con.cursor()
-        cur.execute("DELETE from persons where id=2;")
+        cur.execute("DELETE from persons where id={0}".format('10'))
         con.commit()
         con.close()
     except (Exception) as error:
         print("Ошибка при удалении данных", error)
 
 
+
+def insert():
+    D = ['10', 'DD','dd','ee']
+    try:
+        cur = con.cursor()
+        cur.execute(
+            "UPDATE persons SET name=%s,familiya=%s,otchestvo=%s,pol=%s  WHERE id=10", (D[0], D[1], D[2], D[3])
+        )
+        con.commit()
+        print("Record inserted successfully")
+        con.close()
+    except (Exception) as error:
+        print("Ошибка при вставке данных", error)
 # extract_data()
 # extract_alldata()
-# delete_data()
-insert_data()
+delete_data()
+# random_insert()
+# insert()
