@@ -125,4 +125,4 @@ def delete_data():
 # extract_data()
 # extract_alldata()
 # delete_data()
-# insert_data()
+insert_data()

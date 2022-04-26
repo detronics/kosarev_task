@@ -4,6 +4,7 @@ import sys, psycopg2
 from PyQt5.QtWidgets import QTableWidget, QApplication, QMainWindow, QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem, QWidget, QPushButton, QLineEdit
 from PyQt5 import QtGui
+
 con = psycopg2.connect(
     database="staff",
     user="postgres",
@@ -12,10 +13,11 @@ con = psycopg2.connect(
     port="5432",
 )
 
+
 class Insert_window(QWidget):
     def __init__(self):
         super().__init__()
-        self.setGeometry(667, 136,800,100)
+        self.setGeometry(667, 136, 800, 100)
         self.setWindowTitle('Добавление новой строки')
         self.Table = Table(self)
 
@@ -36,24 +38,28 @@ class Insert_window(QWidget):
         data = []
         try:
             for i in range(0, self.Table.columnCount()):
-                data.append(self.Table.item(0,i).text())
-            data[0] = int(data[0])
+                data.append(self.Table.item(0, i).text())
         except:
-            print('er')
+            print('error')
         try:
             cur = con.cursor()
             cur.execute(
-        "INSERT INTO persons (id,name,familiya,otchestvo,pol,birthday) VALUES (data[0], 'data[1]', 'data[2]', 'Petrovich','male','2012-11-11');"
-        "INSERT INTO positions (id, position_name,id_person) VALUES (2, 'master', 2);"
-        "INSERT INTO department (id, department_name, id_person) VALUES (2, 'grs', 2)"
-            )
+                "INSERT INTO persons (id,name,familiya,otchestvo,pol,birthday) VALUES (%s,%s,%s,%s,%s,%s)",
+                (data[0], data[1], data[2], data[3], data[4], data[5]))
+            cur.execute(
+                "INSERT INTO positions (id, position_name,id_person) VALUES (%s,%s,%s)",
+                (data[0], data[6], data[0]))
+            cur.execute(
+                "INSERT INTO department (id, department_name, id_person) VALUES (%s,%s,%s)",
+                (data[0], data[7], data[0]))
             con.commit()
             print("Record inserted successfully")
             con.close()
         except (Exception) as error:
             print("Ошибка при вставке данных", error)
-            data = self.Table.item(0,0).text()
-            print(data)
+        self.close()
+
+
 
 class Table(QTableWidget):
     def __init__(self, wg):
@@ -67,18 +73,12 @@ class Table(QTableWidget):
                                         "Должность", "Отдел"])
         header = self.horizontalHeader()
         header.setDefaultSectionSize(95)
-        # self.id = QTableWidgetItem('5859')
-        # self.setItem(0,0,self.id)
 
-
-
-
-app = QApplication(sys.argv)
-ex = Insert_window()
-ex.show()
-sys.exit(app.exec_())
-
-
+#
+# app = QApplication(sys.argv)
+# ex = Insert_window()
+# ex.show()
+# sys.exit(app.exec_())
 
 # здесь идентификатор
 #         self.id = QLineEdit(self)
