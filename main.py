@@ -13,35 +13,45 @@ class MyWidget(QWidget):
 # подключить базу данных
         self.con()
 # параметры окна
-        self.setGeometry(100, 100, 700, 500)
+        self.setGeometry(100, 100, 800, 500)
         self.setWindowTitle('Список сотрудников')
         self.tb = Tb(self)
         self.insert_w = Insert_window()
         self.number = 0
 # кнопка "обновить"
         self.btn = QPushButton('Обновить', self)
-        self.btn.resize(130, 35)
+        self.btn.resize(80, 35)
         self.btn.move(10, 425)
         self.btn.clicked.connect(self.upd)
 # кнопка добавить запись
         self.btn = QPushButton('Добавить', self)
-        self.btn.resize(130, 35)
-        self.btn.move(150, 425)
+        self.btn.resize(80, 35)
+        self.btn.move(100, 425)
         self.btn.clicked.connect(self.add)
 # кнопка удалить запись
         self.btn = QPushButton('Удалить', self)
-        self.btn.resize(130, 35)
-        self.btn.move(290, 425)
+        self.btn.resize(80, 35)
+        self.btn.move(190, 425)
         self.btn.clicked.connect(self.delete)
 # кнопка печать выборки
         self.btn = QPushButton('Печать', self)
-        self.btn.resize(130, 35)
-        self.btn.move(430, 425)
+        self.btn.resize(80, 35)
+        self.btn.move(280, 425)
         self.btn.clicked.connect(self.print)
 # кнопка записи изменений строки в БД
         self.btn = QPushButton('Сохранить', self)
-        self.btn.resize(130, 35)
-        self.btn.move(590, 425)
+        self.btn.resize(80, 35)
+        self.btn.move(370, 425)
+        self.btn.clicked.connect(self.edit)
+# кнопка записи изменений строки в БД
+        self.btn = QPushButton('Выборка по профессиям', self)
+        self.btn.resize(140, 35)
+        self.btn.move(460, 425)
+        self.btn.clicked.connect(self.edit)
+# кнопка записи изменений строки в БД
+        self.btn = QPushButton('Выборка по отделам', self)
+        self.btn.resize(120, 35)
+        self.btn.move(610, 425)
         self.btn.clicked.connect(self.edit)
 # соединение с базой данных
     def con(self):
@@ -107,7 +117,7 @@ class Tb(QTableWidget):
     def __init__(self, wg):
         self.wg = wg  # запомнить окно, в котором эта таблица показывается
         super().__init__(wg)
-        self.setGeometry(10, 10, 600, 400)
+        self.setGeometry(10, 10, 700, 400)
         self.setColumnCount(8)
         self.verticalHeader().hide()
         self.updt() # обновить таблицу

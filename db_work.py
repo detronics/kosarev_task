@@ -91,7 +91,7 @@ def extract_data():
     try:
         cur = con.cursor()
         cur.execute(
-            "SELECT id,name,familiya,otchestvo,pol  from persons"
+            "SELECT id,name,familiya,otchestvo,pol from persons"
         )
         rows = cur.fetchall()
         print(rows)
@@ -126,19 +126,19 @@ def delete_data():
 
 
 def insert():
-    D = ['10', 'DD','dd','ee']
     try:
         cur = con.cursor()
         cur.execute(
-            "UPDATE persons SET name=%s,familiya=%s,otchestvo=%s,pol=%s  WHERE id=10", (D[0], D[1], D[2], D[3])
+            "SELECT position_name, COUNT(position_name) FROM positions GROUP BY position_name"
         )
-        con.commit()
-        print("Record inserted successfully")
+
+        s = cur.fetchall()
+        print("Insert inserted successfully", s)
         con.close()
     except (Exception) as error:
-        print("Ошибка при вставке данных", error)
+        print("Ошибка при подсчете данных", error)
 # extract_data()
 # extract_alldata()
-delete_data()
+# delete_data()
 # random_insert()
-# insert()
+insert()
