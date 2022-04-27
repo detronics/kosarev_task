@@ -4,10 +4,9 @@ import sys
 import psycopg2
 from PyQt5.QtWidgets import QTableWidget, QApplication, QMainWindow, QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem, QWidget, QPushButton, QTableView
-from PyQt5.QtSql import QSqlDatabase
 from insert_window import Insert_window,Table
-import pandas
-# from main import MyWidget.param
+import csv
+
 con = psycopg2.connect(
     database="staff",
     user="postgres",
@@ -19,11 +18,9 @@ con = psycopg2.connect(
 class ExtractWindow(QWidget):
     def __init__(self,param='prof'):
         super().__init__()
-        print('init')
         self.setGeometry(0, 0, 400, 500)
         self.setWindowTitle('Выборка данных')
         self.param = param
-        self.lol = 2
         self.Table = ExtractTable(self)
         self.btn = QPushButton('Экспорт в xlsx', self)
         self.btn.resize(80, 35)
@@ -31,16 +28,18 @@ class ExtractWindow(QWidget):
         self.btn.clicked.connect(self.export)
 
     def export(self):
-        print(self.param)
-        columnHeaders = []
-        for j in range(self.Table.model().columnCount()):
-            columnHeaders.append(self.Table.horizontalHeaderItem(j).text())
-        df = pandas.DataFrame(columns=columnHeaders)
-        for row in range(self.Table.rowCount()):
-            for col in range(self.Table.columnCount()):
-                df.at[row, columnHeaders[col]] = self.Table.item(row, col).text()
-        # df.to_excel(r'D:\Dummy File XYZ.xlsx', index=False)
-        print('Excel file exported')
+        with open(r'C:\test.csv', 'w') as csv_file:
+            writer = csv.writer(csv_file, dialect='excel')
+            for row in range(self.Table.rowCount()):
+                row_data = []
+                for col in range(self.Table.columnCount()):
+                    item = self.Table.item(row, col)
+                    if item is not None:
+                        row_data.append(item.text())
+                    else:
+                        row_data.append('')
+                writer.writerow(row_data)
+
 
 class ExtractTable(QTableWidget):
     def __init__(self, wg):
@@ -75,7 +74,3 @@ class ExtractTable(QTableWidget):
         self.resizeColumnsToContents()
 
 
-# app = QApplication(sys.argv)
-# ex = ExtractWindow()
-# ex.show()
-# sys.exit(app.exec_())

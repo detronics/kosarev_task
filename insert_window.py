@@ -3,7 +3,7 @@
 import sys, psycopg2
 from PyQt5.QtWidgets import QTableWidget, QApplication, QMainWindow, QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem, QWidget, QPushButton, QLineEdit
-from PyQt5 import QtGui
+
 
 con = psycopg2.connect(
     database="staff",
@@ -74,8 +74,4 @@ class Table(QTableWidget):
         header = self.horizontalHeader()
         header.setDefaultSectionSize(95)
 
-#
-# app = QApplication(sys.argv)
-# ex = Insert_window()
-# ex.show()
-# sys.exit(app.exec_())
+
