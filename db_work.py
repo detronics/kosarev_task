@@ -25,38 +25,17 @@ positions = ['Сантехник', 'Машинист', 'Водитель', 'Пр
              'Плотник', ]
 
 
-# Создание соединения
-# def create_connection():
-#     try:
-#         con = psycopg2.connect(
-#             database="staff",
-#             user="postgres",
-#             password="123456",
-#             host="127.0.0.1",
-#             port="5432"
-#         )
-#         cursor = con.cursor()
-#         # Распечатать сведения о PostgreSQL
-#         print("Информация о сервере PostgreSQL")
-#         print(con.get_dsn_parameters(), "\n")
-#         # Выполнение SQL-запроса
-#         cursor.execute("SELECT version();")
-#         # Получить результат
-#         record = cursor.fetchone()
-#         print("Вы подключены к - ", record, "\n")
-#     except (Exception) as error:
-#         print("Ошибка при работе с PostgreSQL", error)
 
 # Вставка новой строки
 def insert_data():
     try:
         cur = con.cursor()
         cur.execute(
-                "INSERT INTO persons (name,familiya,otchestvo,pol,birthday) VALUES ('Petr', 'Petrov', 'Petrovich',"
-                "'male','2012-11-11');"
-                " INSERT INTO positions (position_name) VALUES ('master', 10);"
-                # "INSERT INTO department (department_name) VALUES ('grs')"
-            )
+            "INSERT INTO persons (name,familiya,otchestvo,pol,birthday) VALUES ('Petr', 'Petrov', 'Petrovich',"
+            "'male','2012-11-11');"
+            " INSERT INTO positions (position_name) VALUES ('master', 10);"
+            # "INSERT INTO department (department_name) VALUES ('grs')"
+        )
         con.commit()
         print("Record inserted successfully")
         con.close()
@@ -67,23 +46,22 @@ def insert_data():
 def random_insert():
     try:
         cur = con.cursor()
-        for i in range(1,15):
+        for i in range(1, 15):
             cur.execute(
                 "INSERT INTO persons (id,name,familiya,otchestvo,pol,birthday) VALUES (%s,%s,%s,%s,%s,%s)",
-                (i, name[random.randint(0,14)], last_name[random.randint(0,14)], middle_name[random.randint(0,14)],
-                 sex[random.randint(0,1)], birthday[random.randint(0,14)]))
+                (i, name[random.randint(0, 14)], last_name[random.randint(0, 14)], middle_name[random.randint(0, 14)],
+                 sex[random.randint(0, 1)], birthday[random.randint(0, 14)]))
             cur.execute(
-            "INSERT INTO positions (id, position_name,id_person) VALUES (%s,%s,%s)",
-            (i, positions[random.randint(0,8)], i))
+                "INSERT INTO positions (id, position_name,id_person) VALUES (%s,%s,%s)",
+                (i, positions[random.randint(0, 8)], i))
             cur.execute(
-            "INSERT INTO department (id, department_name, id_person) VALUES (%s,%s,%s)",
-            (i, departments[random.randint(0,9)], i))
+                "INSERT INTO department (id, department_name, id_person) VALUES (%s,%s,%s)",
+                (i, departments[random.randint(0, 9)], i))
         con.commit()
         print(" Random record inserted successfully")
         con.close()
     except (Exception) as error:
         print("Ошибка при вставке данных", error)
-
 
 
 # Извлечение данных
@@ -104,7 +82,9 @@ def extract_alldata():
     try:
         cur = con.cursor()
         cur.execute(
-            "SELECT persons.*,positions.position_name,department.department_name FROM persons INNER JOIN positions ON persons.id=positions.id_person INNER JOIN department ON persons.id=department.id_person"
+            "SELECT persons.*,positions.position_name,department.department_name FROM persons"
+            " INNER JOIN positions ON persons.id=positions.id_person INNER JOIN department "
+            "ON persons.id=department.id_person"
         )
         rows = cur.fetchall()
         print(rows)
@@ -124,7 +104,6 @@ def delete_data():
         print("Ошибка при удалении данных", error)
 
 
-
 def insert():
     try:
         cur = con.cursor()
@@ -137,6 +116,8 @@ def insert():
         con.close()
     except (Exception) as error:
         print("Ошибка при подсчете данных", error)
+
+
 # extract_data()
 # extract_alldata()
 # delete_data()
