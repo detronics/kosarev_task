@@ -52,10 +52,10 @@ def insert_data():
     try:
         cur = con.cursor()
         cur.execute(
-                "INSERT INTO persons (id,name,familiya,otchestvo,pol,birthday) VALUES (2, 'Petr', 'Petrov', 'Petrovich',"
+                "INSERT INTO persons (name,familiya,otchestvo,pol,birthday) VALUES ('Petr', 'Petrov', 'Petrovich',"
                 "'male','2012-11-11');"
-                " INSERT INTO positions (id, position_name,id_person) VALUES (2, 'master', 2);"
-                "INSERT INTO department (id, department_name, id_person) VALUES (2, 'grs', 2)"
+                " INSERT INTO positions (position_name) VALUES ('master', 10);"
+                # "INSERT INTO department (department_name) VALUES ('grs')"
             )
         con.commit()
         print("Record inserted successfully")
@@ -141,4 +141,4 @@ def insert():
 # extract_alldata()
 # delete_data()
 # random_insert()
-insert()
+insert_data()
